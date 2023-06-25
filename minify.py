@@ -7,9 +7,9 @@ def compress(input, output):
 	print(f"Compressing {input} to {output}")
 
 	inp = ffmpeg.input(input)
-
 	crf = "18" # 18 is considered visually lossless
-	outp = ffmpeg.output(inp, output, crf=crf, vcodec="libx265", preset="slow")
+	output_kwargs = {'crf': crf, 'codec': 'libx265', 'preset': 'slow', 'map_metadata': 0}
+	outp = ffmpeg.output(inp, output, **output_kwargs)
 
 	try:
 		ffmpeg.run(outp, overwrite_output=False)
@@ -24,7 +24,7 @@ def compress(input, output):
 		print(e.stderr.decode())
 		return False
 
-def process_dir(dir, ext="mp4"):
+def process_dir(dir, ext="mov"):
 	print(f"Processing directory {dir}")
 	files = glob.glob(f"{dir}/*.{ext}")
 
